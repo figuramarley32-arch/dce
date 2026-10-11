@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Developer Code Elite IPPS Malanje</title>
+<style>
+:root{--bg:#0d1117;--p:#161b22;--p2:#1f2630;--bd:#2d3540;--tx:#e6edf3;--mu:#8b98a8;--ac:#3ddc97;--ac2:#ffb454;--me:#14573f;--er:#ff6b6b}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:hidden}
+button,input,select{font:inherit;color:inherit}
+.hide{display:none!important}
+#auth{height:100%;overflow:auto;padding:24px 18px;display:flex;flex-direction:column;align-items:center}
+.brand{text-align:center;margin:10px 0 18px}
+.brand .code{font:700 13px ui-monospace,Menlo,Consolas,monospace;color:var(--ac);letter-spacing:.5px}
+.brand h1{font-size:22px;margin:4px 0;line-height:1.2}
+.brand small{color:var(--mu)}
+.card{width:100%;max-width:400px;background:var(--p);border:1px solid var(--bd);border-radius:12px;padding:18px}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1;padding:9px;border:1px solid var(--bd);background:none;border-radius:8px;cursor:pointer;color:var(--mu)}
+.tabs button.on{background:var(--ac);color:#06281a;border-color:var(--ac);font-weight:600}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+input,select{width:100%;padding:11px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;outline:none}
+input:focus,select:focus{border-color:var(--ac)}
+.btn{width:100%;margin-top:16px;padding:12px;border:0;border-radius:8px;background:var(--ac);color:#06281a;font-weight:700;cursor:pointer}
+.err{color:var(--er);font-size:13px;margin-top:10px;min-height:16px}
+.pic{display:flex;align-items:center;gap:12px;margin-top:6px}
+.av{width:44px;height:44px;border-radius:50%;object-fit:cover;background:var(--p2);flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ac);border:2px solid var(--bd)}
+.av.big{width:64px;height:64px}
+#app{height:100%;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:var(--p);border-bottom:1px solid var(--bd)}
+.top .t{flex:1;min-width:0}
+.top b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top small{color:var(--mu);font-size:12px}
+.ib{background:none;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer;color:var(--tx)}
+#list{flex:1;overflow:auto}
+.row{display:flex;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--bd);cursor:pointer}
+.row:active{background:var(--p2)}
+.row .i{flex:1;min-width:0}
+.row .i b{display:block}
+.row .i small{color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.lv{font-size:11px;padding:2px 8px;border-radius:99px;border:1px solid var(--ac2);color:var(--ac2);white-space:nowrap}
+.sec{padding:10px 14px 4px;font-size:12px;color:var(--mu)}
+#chat{flex:1;display:flex;flex-direction:column;min-height:0}
+#msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.m{max-width:80%;padding:8px 11px;border-radius:12px;background:var(--p2);align-self:flex-start;word-wrap:break-word;overflow-wrap:anywhere}
+.m.me{background:var(--me);align-self:flex-end}
+.m .n{font-size:12px;color:var(--ac2);font-weight:600}
+.m .h{font-size:10.5px;color:var(--mu);text-align:right;margin-top:2px}
+.m audio{max-width:100%;height:36px}
+.bar{display:flex;gap:8px;padding:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));background:var(--p);border-top:1px solid var(--bd)}
+.bar input{flex:1;border-radius:99px;padding:11px 14px}
+.rb{width:44px;height:44px;border-radius:50%;border:0;background:var(--ac);color:#06281a;font-weight:700;cursor:pointer;flex:none}
+.rb.mic{background:var(--p2);color:var(--tx);border:1px solid var(--bd)}
+.rb.rec{background:var(--er);color:#fff}
+.empty{text-align:center;color:var(--mu);margin:auto;padding:20px}
+.vip{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--ac2);color:#2a1a00;font-weight:700;white-space:nowrap}
+.ok{color:var(--ac);font-size:13px;margin-top:10px}
+.wa{display:inline-block;margin-top:8px;padding:9px 14px;border-radius:8px;background:#25d366;color:#052e16;font-weight:700;text-decoration:none}
+.acts{display:flex;gap:6px}
+.acts button{border:0;border-radius:8px;padding:7px 10px;cursor:pointer;font-weight:600}
+.okb{background:var(--ac);color:#06281a}.nob{background:var(--er);color:#fff}
+#tool{flex:1;overflow:auto;padding:14px}
+#tool pre{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px;overflow:auto;font:12.5px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;margin:6px 0 12px}
+#tool h3{margin:12px 0 4px}
+#tool textarea{width:100%;min-height:150px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:10px;font:12.5px/1.4 ui-monospace,Menlo,monospace}
+#tool iframe{width:100%;height:220px;background:#fff;border:1px solid var(--bd);border-radius:8px;margin-top:8px}
+.bub{background:var(--p2);border-radius:12px;padding:10px 12px;margin:8px 0}
+.bub.u{background:var(--me);margin-left:28px}
+.sp{display:inline-block;width:15px;height:15px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:rot .7s linear infinite;vertical-align:-2px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ac);margin-left:6px}
+#boot{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:40;color:var(--mu)}
+#boot .sp{width:36px;height:36px;border-width:3px;color:var(--ac)}
+.modal{position:fixed;inset:0;background:#000a;display:flex;align-items:center;justify-content:center;padding:18px;z-index:9}
+</style>
+</head>
+<body>
+<script>setTimeout(function(){var b=document.getElementById("boot");if(b)b.style.display="none"},9000)</script>
+<div id="boot"><span class="sp"></span><small>A carregar…</small></div>
+
+<!-- ACESSO -->
+<div id="auth">
+  <div class="brand">
+    <div class="code">&lt;/&gt; IPPS Malanje</div>
+    <h1>Developer Code Elite</h1>
+    <small>Comunidade privada de programadores</small>
+  </div>
+  <div class="card">
+    <div class="tabs">
+      <button id="tL" class="on">Entrar</button>
+      <button id="tR">Inscrever-me</button>
+    </div>
+
+    <form id="fL" onsubmit="return false">
+      <label>Número de inscrição</label>
+      <input id="lN" inputmode="numeric" autocomplete="off">
+      <label>Senha</label>
+      <input id="lP" type="password" autocomplete="off">
+      <button class="btn" id="bL">Entrar</button>
+      <a href="#" id="fg" style="display:block;text-align:center;margin-top:14px;color:var(--ac2);font-size:13px">Esqueci a senha</a>
+    </form>
+
+    <form id="fF" class="hide" onsubmit="return false">
+      <p style="color:var(--mu);font-size:13px">A senha é guardada de forma segura e não pode ser vista. Peça ao administrador uma senha nova pelo WhatsApp, indicando o seu número de inscrição.</p>
+      <a class="wa" id="waF" target="_blank" rel="noopener">Pedir ao administrador</a>
+      <a href="#" id="fb" style="display:block;text-align:center;margin-top:14px;color:var(--ac2);font-size:13px">‹ Voltar</a>
+    </form>
+
+    <form id="fR" class="hide" onsubmit="return false">
+      <div class="pic">
+        <div class="av big" id="rPrev">+</div>
+        <div style="flex:1"><label style="margin:0 0 4px">Foto de perfil (opcional)</label>
+        <input id="rF" type="file" accept="image/*" style="padding:7px"></div>
+      </div>
+      <label>Nome completo</label>
+      <input id="rName" autocomplete="off">
+      <label>Nível de programação</label>
+      <select id="rLv">
+        <option value="">Escolher…</option>
+        <option>Iniciante</option>
+        <option>Básico</option>
+        <option>Intermédio</option>
+        <option>Avançado</option>
+        <option>Elite</option>
+      </select>
+      <label>Senha (mín. 6 caracteres)</label>
+      <input id="rP" type="password" autocomplete="off">
+      <label>Código da comunidade</label>
+      <input id="rC" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="Ex.: IPPS-ELITE">
+      <p style="color:var(--mu);font-size:12px;margin-top:12px">O seu número de inscrição será gerado automaticamente depois de enviar o formulário.</p>
+      <button class="btn" id="bR">Criar conta</button>
+    </form>
+    <div class="err" id="err"></div>
+  </div>
+  <a class="wa" id="waLink" target="_blank" rel="noopener">WhatsApp do administrador: 931 170 669</a>
+  <small style="color:var(--mu);margin-top:14px">Desenvolvido por Figura Marley</small>
+</div>
+
+<!-- APP -->
+<div id="app" class="hide">
+  <div class="top">
+    <button class="ib hide" id="back">‹</button>
+    <div id="meAv" style="cursor:pointer;flex:none"></div>
+    <div class="t"><b id="title"></b><small id="sub"></small></div>
+    <button class="ib hide" id="ge" title="Editar grupo">✎</button>
+    <button class="ib hide" id="adm">Painel</button>
+    <button class="ib" id="out">Sair</button>
+  </div>
+  <div id="list"></div>
+  <div id="tool" class="hide"></div>
+  <div id="chat" class="hide">
+    <div id="msgs"></div>
+    <div class="bar">
+      <button class="rb mic" id="mic" title="Mensagem de voz">🎤</button>
+      <input id="txt" placeholder="Escrever mensagem…" autocomplete="off">
+      <button class="rb" id="send">➤</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal hide" id="grp"><div class="card" id="grpBody" style="max-height:92%;overflow:auto"></div></div>
+<div class="modal hide" id="prof"><div class="card" id="profBody" style="text-align:center"></div></div>
+
+<script type="module">
+let initializeApp, initializeAuth, getAuth, browserLocalPersistence, inMemoryPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut;
+let getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, runTransaction;
+let fapp, auth, fdb, fbErr = 'load';
+for (const v of ['13.0.0', '11.6.1', '10.14.1']) {
+  try {
+    const B = 'https://www.gstatic.com/firebasejs/' + v + '/';
+    const [A, Au, Fs] = await Promise.all([import(B + 'firebase-app.js'), import(B + 'firebase-auth.js'), import(B + 'firebase-firestore.js')]);
+    ({ initializeApp } = A);
+    ({ initializeAuth, getAuth, browserLocalPersistence, inMemoryPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } = Au);
+    ({ getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where, onSnapshot, runTransaction } = Fs);
+    fbErr = null; break;
+  } catch (e) { fbErr = e; }
+}
+const firebaseConfig = {
+  apiKey: "AIzaSyCfCYmFaFSxWtFwbi3zqryYPerqtOThL1A",
+  authDomain: "dce-ipps-malanje.firebaseapp.com",
+  projectId: "dce-ipps-malanje",
+  storageBucket: "dce-ipps-malanje.firebasestorage.app",
+  messagingSenderId: "614971121784",
+  appId: "1:614971121784:web:98e32ef6c8beb594188d8d"
+};
+if (!fbErr) {
+  try {
+    fapp = initializeApp(firebaseConfig);
+    try { auth = initializeAuth(fapp, { persistence: [browserLocalPersistence, inMemoryPersistence] }); } catch (e) { auth = getAuth(fapp); }
+    fdb = getFirestore(fapp);
+  } catch (e) { fbErr = e; }
+}
+/* ====== CONFIGURAÇÃO (o administrador altera aqui) ====== */
+const CODIGO_COMUNIDADE = "IPPS-ELITE"; // código para entrar na comunidade
+const CODIGO_ADMIN = "MARLEY-ADMIN"; // use este código ao inscrever-se para criar a conta VIP do administrador
+const ADMIN_WA = "244931170669";     // WhatsApp do administrador (+244 931 170 669)
+const SALT = "dce-ipps-malanje-v1";
+/* ======================================================== */
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+
+let me = null;       // sessão só em memória: ao fechar, pede login outra vez
+let inPanel = false, inTool = false;
+let chatWith = null; // 'all' ou nº de inscrição
+let photo = "";
+
+const norm = s => String(s).toUpperCase().replace(/\s+/g, '').replace(/[\u2010-\u2015\u2212]/g, '-');
+const DB = { users: {}, msgs: {}, group: null, codes: {} };
+const grp = () => DB.group || { name: 'Developer Code Elite', photo: '' };
+function rnd(pre) {
+  const a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let r = '';
+  const b = crypto.getRandomValues ? crypto.getRandomValues(new Uint8Array(5)) : Array.from({ length: 5 }, () => Math.random() * 256);
+  for (const x of b) r += a[x % a.length];
+  return pre + '-' + r;
+}
+async function hash(s) {
+  try {
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(SALT + s));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  } catch (e) {
+    let h = 5381; for (const c of SALT + s) h = ((h << 5) + h + c.charCodeAt(0)) >>> 0;
+    return 'f' + h;
+  }
+}
+const users = () => DB.users;
+const msgs = () => Object.values(DB.msgs).sort((a, b) => a.t - b.t);
+const ini = n => n.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+const avatar = (u, cls = '') => u.photo
+  ? `<img class="av ${cls}" src="${u.photo}" alt="">`
+  : `<div class="av ${cls}">${esc(ini(u.name))}</div>`;
+function spin(b, on) {
+  if (on) { b.dataset.t = b.textContent; b.disabled = true; b.innerHTML = '<span class="sp"></span> A processar…'; }
+  else { b.disabled = false; b.textContent = b.dataset.t || b.textContent; }
+}
+const lim = (pr, ms = 25000) => Promise.race([pr, new Promise((_, rj) => setTimeout(() => rj({ code: 'timeout' }), ms))]);
+const isOn = u => !!u && ((me && u.num === me.num) || (u.lastSeen && Date.now() - u.lastSeen < 400000));
+const showErr = t => $('err').textContent = t || '';
+
+/* Tabs */
+function tab(reg) {
+  $('fF').classList.add('hide');
+  $('fL').classList.toggle('hide', reg); $('fR').classList.toggle('hide', !reg);
+  $('tL').classList.toggle('on', !reg); $('tR').classList.toggle('on', reg); showErr();
+}
+$('tL').onclick = () => tab(false); $('tR').onclick = () => tab(true);
+
+/* Esqueci a senha */
+$('fg').onclick = e => { e.preventDefault(); $('fL').classList.add('hide'); $('fF').classList.remove('hide'); showErr(); };
+$('fb').onclick = e => { e.preventDefault(); tab(false); };
+$('waF').href = 'https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent('Olá, esqueci a minha senha da Developer Code Elite. Preciso de uma senha nova. O meu nº de inscrição é: ');
+
+/* Foto: reduz para 160px */
+$('rF').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    const im = new Image();
+    im.onload = () => {
+      const s = 160, c = document.createElement('canvas'); c.width = c.height = s;
+      const m = Math.min(im.width, im.height);
+      c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, s, s);
+      photo = c.toDataURL('image/jpeg', .75);
+      $('rPrev').innerHTML = `<img class="av big" src="${photo}">`;
+    };
+    im.src = r.result;
+  };
+  r.readAsDataURL(f);
+};
+
+/* Registo */
+$('bR').onclick = async () => {
+  if (fbErr) return showErr('O Firebase não carregou. Guarde o ficheiro e abra-o no Chrome, com internet (não dentro do Claude).');
+  const name = $('rName').value.trim(), lv = $('rLv').value, pw = $('rP').value, code = $('rC').value.trim();
+  if (name.length < 3) return showErr('Escreva o seu nome completo.');
+  if (!lv) return showErr('Escolha o seu nível de programação.');
+  if (pw.length < 6) return showErr('A senha precisa de pelo menos 6 caracteres.');
+  const gc = norm(code), isAdm = gc === norm(CODIGO_ADMIN), comm = gc === norm(CODIGO_COMUNIDADE);
+  spin($('bR'), true); showErr('');
+  try {
+    let gen = false;
+    if (!isAdm && !comm) {
+      const cs = await getDoc(doc(fdb, 'codes', gc || '_'));
+      if (!cs.exists()) return showErr('Código da comunidade incorreto.');
+      if (cs.data().used) return showErr('Este código de convite já foi usado.');
+      gen = true;
+    }
+    const cref = doc(fdb, 'meta', 'counter');
+    if (isAdm && (await getDoc(cref)).exists()) return showErr('Já existe uma conta de administrador.');
+    const num = await runTransaction(fdb, async t => { const c = await t.get(cref); const n = c.exists() ? c.data().n + 1 : 1001; t.set(cref, { n }); return String(n); });
+    const cred = await createUserWithEmailAndPassword(auth, num + '@dce.app', pw);
+    const prof = { num, name, level: lv, photo, since: Date.now(), admin: isAdm, status: isAdm ? 'aprovado' : 'pendente', vipCode: isAdm ? rnd('VIP') : '', uid: cred.user.uid };
+    await setDoc(doc(fdb, 'users', num), prof);
+    if (gen) await updateDoc(doc(fdb, 'codes', gc), { used: num });
+    if (isAdm) { alert('Conta VIP criada! O seu número de inscrição é ' + num + '. Anote-o para entrar.'); return enter(prof); }
+    await signOut(auth);
+    tab(false); $('lN').value = num;
+    $('err').innerHTML = '<div class="ok" style="font-size:15px">Inscrição enviada!<br>O seu número de inscrição é <b style="font-size:22px;color:var(--ac2)">' + num + '</b><br>Anote-o: precisa dele e da senha para entrar. Aguarde a aprovação do administrador.</div><a class="wa" target="_blank" rel="noopener" href="https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent('Olá, fiz a inscrição na Developer Code Elite. Nome: ' + name + ' | Nº de inscrição: ' + num) + '">Avisar o administrador</a>';
+  } catch (e) { showErr('Não foi possível concluir (' + (e.code || e.message) + '). Verifique a internet e tente de novo.'); }
+  finally { spin($('bR'), false); }
+};
+
+/* Login */
+$('bL').onclick = async () => {
+  if (fbErr) return showErr('O Firebase não carregou. Guarde o ficheiro e abra-o no Chrome, com internet (não dentro do Claude).');
+  const num = $('lN').value.trim(), pw = $('lP').value;
+  if (!num || !pw) return showErr('Escreva o número de inscrição e a senha.');
+  spin($('bL'), true);
+  try {
+    await lim(signInWithEmailAndPassword(auth, num + '@dce.app', pw));
+    const sn = await lim(getDoc(doc(fdb, 'users', num))), u = sn.exists() ? sn.data() : null;
+    if (!u) { await signOut(auth); return showErr('Conta não encontrada. Contacte o administrador.'); }
+    const st = u.status || 'aprovado';
+    if (st !== 'aprovado') { await signOut(auth);
+      return showErr(st === 'pendente' ? 'A sua inscrição ainda aguarda aprovação do administrador.' : st === 'removido' ? 'Foi removido da comunidade. Contacte o administrador no WhatsApp.' : 'A sua inscrição foi reprovada. Contacte o administrador no WhatsApp.'); }
+    showErr(''); enter(u);
+  } catch (e) { showErr(e.code === 'timeout' || e.code === 'auth/network-request-failed' ? 'Ligação lenta ou sem internet. Tente outra vez.' : 'Número de inscrição ou senha incorretos.'); }
+  finally { spin($('bL'), false); }
+};
+
+/* Sincronização em tempo real */
+function banner(e) {
+  let b = document.getElementById('bn');
+  if (!b) { b = document.createElement('div'); b.id = 'bn'; b.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:30;background:#ff6b6b;color:#fff;padding:8px 12px;font-size:13px'; b.onclick = () => b.remove(); document.body.appendChild(b); }
+  b.textContent = 'Erro: ' + (e && (e.code || e.message) || e) + ' (toque para fechar e envie esta mensagem)';
+}
+window.addEventListener('unhandledrejection', ev => banner(ev.reason));
+let unsubs = [], beatT = 0;
+const beat = () => { if (me && !document.hidden) updateDoc(doc(fdb, 'users', me.num), { lastSeen: Date.now() }).catch(() => {}); };
+document.addEventListener('visibilitychange', beat);
+function refresh() {
+  if (!me) return;
+  if (DB.users[me.num]) me = DB.users[me.num];
+  if (chatWith) render(false);
+  else if (inPanel) panel();
+  else if (!inTool && !$('list').classList.contains('hide')) { const sc = $('list').scrollTop; showList(); $('list').scrollTop = sc; }
+  if (chatWith && chatWith !== 'all' && DB.users[chatWith]) $('sub').textContent = DB.users[chatWith].level + ' · ' + (isOn(DB.users[chatWith]) ? 'online' : 'offline');
+}
+setInterval(() => refresh(), 60000);
+function startSync() {
+  stopSync(); beat(); beatT = setInterval(beat, 300000);
+  const n = me.num, er = e => banner(e);
+  const merge = s => { s.docChanges().forEach(c => { if (c.type === 'removed') delete DB.msgs[c.doc.id]; else DB.msgs[c.doc.id] = c.doc.data(); }); refresh(); };
+  unsubs.push(onSnapshot(collection(fdb, 'users'), s => { DB.users = {}; s.forEach(d => DB.users[d.id] = d.data()); refresh(); }, er));
+  unsubs.push(onSnapshot(doc(fdb, 'meta', 'group'), s => { DB.group = s.exists() ? s.data() : null; refresh(); }, er));
+  unsubs.push(onSnapshot(query(collection(fdb, 'msgs'), where('to', '==', 'all')), merge, er));
+  unsubs.push(onSnapshot(query(collection(fdb, 'msgs'), where('from', '==', n)), merge, er));
+  unsubs.push(onSnapshot(query(collection(fdb, 'msgs'), where('to', '==', n)), merge, er));
+  if (me.admin) unsubs.push(onSnapshot(collection(fdb, 'codes'), s => { DB.codes = {}; s.forEach(d => DB.codes[d.id] = d.data()); refresh(); }, er));
+}
+function stopSync() { clearInterval(beatT); unsubs.forEach(u => u()); unsubs = []; DB.users = {}; DB.msgs = {}; DB.group = null; DB.codes = {}; }
+
+function enter(u) {
+  me = u; $('auth').classList.add('hide'); $('app').classList.remove('hide');
+  $('lP').value = $('rP').value = $('rC').value = '';
+  $('meAv').innerHTML = avatar(u);
+  $('meAv').onclick = () => profile(me.num);
+  $('adm').classList.toggle('hide', !me.admin);
+  startSync();
+  showList();
+}
+$('out').onclick = () => { stopSync(); signOut(auth); me = null; inPanel = false; chatWith = null; $('app').classList.add('hide'); $('auth').classList.remove('hide'); tab(false); };
+
+/* Lista */
+function showList() {
+  chatWith = null; inPanel = false; inTool = false; $('tool').classList.add('hide'); $('ge').classList.add('hide');
+  $('chat').classList.add('hide'); $('list').classList.remove('hide'); $('back').classList.add('hide');
+  const G = grp(); $('title').textContent = G.name; $('sub').textContent = 'IPPS Malanje · ' + me.name;
+  const all = Object.values(users()).filter(u => u.num !== me.num && (u.status || 'aprovado') === 'aprovado');
+  const ms = msgs();
+  const last = k => {
+    const l = ms.filter(m => k === 'all' ? m.to === 'all' : (m.from === me.num && m.to === k) || (m.from === k && m.to === me.num)).pop();
+    return l ? (l.type === 'audio' ? '🎤 Mensagem de voz' : l.body) : 'Sem mensagens';
+  };
+  let h = `<div class="sec">Canal geral</div>
+  <div class="row" data-k="all">${G.photo ? `<img class="av" src="${G.photo}" alt="">` : '<div class="av" style="color:var(--ac2)">#</div>'}<div class="i"><b>${esc(G.name)}</b><small>${esc(last('all'))}</small></div></div>
+  <div class="sec">Ferramentas</div>
+  <div class="row" data-k="t:ia"><div class="av">🤖</div><div class="i"><b>IA de Programação</b><small>Pergunte sobre qualquer linguagem</small></div></div>
+  <div class="row" data-k="t:web"><div class="av">🎓</div><div class="i"><b>Professor Web</b><small>Aulas de HTML, CSS e JavaScript</small></div></div>
+  <div class="row" data-k="t:syn"><div class="av">📚</div><div class="i"><b>Sintaxes</b><small>10 linguagens de programação</small></div></div>
+  <div class="sec">Membros (${all.length}) — mensagens privadas</div>`;
+  h += all.length ? all.map(u => `<div class="row" data-k="${u.num}">${avatar(u)}<div class="i"><b>${esc(u.name)}${isOn(u) ? '<span class="dot"></span>' : ''}${u.admin ? ` <span class="vip">⭐ VIP</span>` : ''}</b><small>${esc(last(u.num))}</small></div><span class="lv">${esc(u.level)}</span></div>`).join('')
+    : `<div class="empty">Ainda não há outros membros. Partilhe o código da comunidade para convidar colegas.</div>`;
+  $('list').innerHTML = h;
+  $('list').querySelectorAll('.row').forEach(r => r.onclick = () => r.dataset.k.startsWith('t:') ? openTool(r.dataset.k) : openChat(r.dataset.k));
+}
+
+/* Chat */
+function openChat(k) {
+  chatWith = k; inTool = false;
+  $('list').classList.add('hide'); $('chat').classList.remove('hide'); $('back').classList.remove('hide');
+  $('ge').classList.toggle('hide', !(k === 'all' && me.admin));
+  if (k === 'all') { $('title').textContent = grp().name; $('sub').textContent = 'Todos os membros'; }
+  else {
+    const u = users()[k]; $('title').textContent = u.name; $('sub').textContent = u.level + ' · ' + (isOn(u) ? 'online' : 'offline');
+    $('title').onclick = () => profile(k);
+  }
+  render(true);
+}
+$('back').onclick = showList;
+
+function render(scroll) {
+  if (!chatWith) return;
+  const U = users(), k = chatWith;
+  const list = msgs().filter(m => k === 'all' ? m.to === 'all' : (m.from === me.num && m.to === k) || (m.from === k && m.to === me.num));
+  const box = $('msgs');
+  const atEnd = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  box.innerHTML = list.length ? list.map(m => {
+    const mine = m.from === me.num, f = U[m.from];
+    const d = new Date(m.t), hh = d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+    return `<div class="m ${mine ? 'me' : ''}">${k === 'all' && !mine ? `<div class="n">${esc(f ? f.name : 'Membro')}${f && f.admin ? ' ⭐' : ''}</div>` : ''}
+    ${m.type === 'audio' ? `<audio controls src="${m.body}"></audio>` : esc(m.body)}<div class="h">${hh}</div></div>`;
+  }).join('') : `<div class="empty">Nenhuma mensagem. Diga olá 👋</div>`;
+  if (scroll || atEnd) box.scrollTop = box.scrollHeight;
+}
+
+async function push(type, body) {
+  const id = Date.now() + '-' + me.num + '-' + Math.random().toString(36).slice(2, 6);
+  const m = { id, from: me.num, to: chatWith, type, body, t: Date.now() };
+  DB.msgs[id] = m; render(true);
+  try { await setDoc(doc(fdb, 'msgs', id), m); }
+  catch (e) { delete DB.msgs[id]; render(false); alert('Não foi possível enviar. Verifique a internet.'); }
+}
+function sendText() {
+  const t = $('txt').value.trim(); if (!t || !chatWith) return;
+  push('text', t); $('txt').value = '';
+}
+$('send').onclick = sendText;
+$('txt').onkeydown = e => { if (e.key === 'Enter') sendText(); };
+
+/* Mensagem de voz */
+let rec, chunks = [], timer;
+$('mic').onclick = async () => {
+  if (rec && rec.state === 'recording') { rec.stop(); return; }
+  try {
+    const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+    rec = new MediaRecorder(s); chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => {
+      clearTimeout(timer); s.getTracks().forEach(t => t.stop());
+      $('mic').classList.remove('rec'); $('mic').textContent = '🎤';
+      const r = new FileReader(); r.onload = () => push('audio', r.result);
+      r.readAsDataURL(new Blob(chunks, { type: rec.mimeType }));
+    };
+    rec.start(); $('mic').classList.add('rec'); $('mic').textContent = '■';
+    timer = setTimeout(() => rec.state === 'recording' && rec.stop(), 20000);
+  } catch (e) { alert('Não foi possível usar o microfone. Permita o acesso no navegador.'); }
+};
+
+/* Perfil */
+function profile(k) {
+  const U = users(), u = U[k]; if (!u) return;
+  if (u.admin && !u.vipCode) { u.vipCode = rnd('VIP'); updateDoc(doc(fdb, 'users', u.num), { vipCode: u.vipCode }); }
+  const own = u.admin && me && me.num === u.num;
+  $('profBody').innerHTML = `${avatar(u, 'big')}<h3 style="margin:10px 0 4px">${esc(u.name)}</h3>
+  <span class="lv">${esc(u.level)}</span>${u.admin ? ' <span class="vip">⭐ VIP · Administrador</span>' : ''}
+  <p style="color:var(--mu);margin-top:10px;font-size:13px">Inscrição nº ${esc(u.num)}<br>Membro desde ${new Date(u.since).toLocaleDateString('pt-PT')}</p>
+  ${own ? `<div style="margin-top:10px;padding:10px;border:1px dashed var(--ac2);border-radius:8px"><small style="color:var(--mu)">Conta VIP · Código VIP (só você vê)</small><br><b style="font:700 18px ui-monospace,monospace;color:var(--ac2)">${esc(u.vipCode)}</b></div>` : ''}
+  <button class="btn" id="pc">Fechar</button>`;
+  $('prof').classList.remove('hide'); $('pc').onclick = () => $('prof').classList.add('hide');
+}
+
+/* Painel do administrador */
+async function setStatus(num, st) {
+  const u = users(); if (!u[num] || u[num].admin) return;
+  try { st === 'remover' ? await deleteDoc(doc(fdb, 'users', num)) : await updateDoc(doc(fdb, 'users', num), { status: st }); }
+  catch (e) { alert('Sem permissão ou sem internet.'); }
+  panel();
+}
+function panel() {
+  if (!me || !me.admin) return;
+  inPanel = true; inTool = false; chatWith = null; $('tool').classList.add('hide'); $('ge').classList.add('hide');
+  $('chat').classList.add('hide'); $('list').classList.remove('hide'); $('back').classList.remove('hide');
+  $('title').textContent = 'Painel VIP'; $('sub').textContent = 'Aprovar e reprovar membros';
+  const U = Object.values(users()).filter(u => !u.admin);
+  const grp2 = (t, st) => {
+    const a = U.filter(u => (u.status || 'aprovado') === st);
+    return `<div class="sec">${t} (${a.length})</div>` + a.map(u => `<div class="row" style="cursor:default">${avatar(u)}<div class="i"><b>${esc(u.name)}</b><small>Nº ${esc(u.num)} · ${esc(u.level)}</small></div>
+      <div class="acts">${st !== 'aprovado' ? `<button class="okb" data-a="aprovado" data-n="${u.num}">Aprovar</button>` : ''}
+      ${st !== 'reprovado' ? `<button class="nob" data-a="reprovado" data-n="${u.num}">Reprovar</button>` : `<button class="nob" data-a="remover" data-n="${u.num}">Apagar</button>`}</div></div>`).join('');
+  };
+  const Cd = DB.codes;
+  const cs = `<div class="sec">Códigos de convite (uso único)</div><div style="padding:6px 14px 10px"><button class="btn" id="gen" style="margin:0">🔑 Gerar código</button></div>` +
+    Object.entries(Cd).reverse().map(([c, v]) => `<div class="row" style="cursor:default"><div class="i"><b style="font-family:ui-monospace,monospace">${c}</b><small>${v.used ? 'Usado pelo nº ' + v.used : 'Livre'}</small></div><div class="acts">${v.used ? '' : `<button class="okb" data-w="${c}">Enviar</button>`}<button class="nob" data-d="${c}">✕</button></div></div>`).join('');
+  $('list').innerHTML = cs + grp2('Pendentes', 'pendente') + grp2('Aprovados', 'aprovado') + grp2('Removidos', 'removido') + grp2('Reprovados', 'reprovado');
+  $('gen').onclick = () => { const k = rnd('ELITE'); DB.codes[k] = { used: '', t: Date.now() }; panel(); setDoc(doc(fdb, 'codes', k), { used: '', t: Date.now() }); };
+  $('list').querySelectorAll('button[data-w]').forEach(b => b.onclick = () => window.open('https://wa.me/?text=' + encodeURIComponent('Convite para a Developer Code Elite IPPS Malanje. O seu código de acesso para se inscrever: ' + b.dataset.w), '_blank'));
+  $('list').querySelectorAll('button[data-d]').forEach(b => b.onclick = () => { delete DB.codes[b.dataset.d]; deleteDoc(doc(fdb, 'codes', b.dataset.d)); panel(); });
+  $('list').querySelectorAll('button[data-a]').forEach(b => b.onclick = () => setStatus(b.dataset.n, b.dataset.a));
+}
+$('adm').onclick = panel;
+$('waLink').href = 'https://wa.me/' + ADMIN_WA + '?text=' + encodeURIComponent('Olá, quero entrar na comunidade Developer Code Elite IPPS Malanje.');
+
+/* ===== Editar grupo (VIP) ===== */
+function resizeFile(f, cb) {
+  const r = new FileReader();
+  r.onload = () => { const im = new Image(); im.onload = () => {
+    const c = document.createElement('canvas'); c.width = c.height = 160; const m = Math.min(im.width, im.height);
+    c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, 160, 160); cb(c.toDataURL('image/jpeg', .75)); };
+    im.src = r.result; };
+  r.readAsDataURL(f);
+}
+let gPhoto = null;
+async function stM(n, st) { const u = users(); if (!u[n] || u[n].admin) return; try { await updateDoc(doc(fdb, 'users', n), { status: st }); } catch (e) { alert('Sem permissão ou sem internet.'); } groupEdit(true); }
+function groupEdit(keep) {
+  if (!me || !me.admin) return;
+  const G = grp(), U = Object.values(users()).filter(u => !u.admin);
+  if (!keep) gPhoto = null;
+  const row = (u, lbl, cls, st) => `<div class="row" style="cursor:default;padding:8px 0">${avatar(u)}<div class="i"><b>${esc(u.name)}</b><small>Nº ${esc(u.num)} · ${esc(u.level)}</small></div><button class="${cls}" style="border:0;border-radius:8px;padding:7px 10px;font-weight:600" data-n="${u.num}" data-s="${st}">${lbl}</button></div>`;
+  const mem = U.filter(u => (u.status || 'aprovado') === 'aprovado'), out = U.filter(u => (u.status || 'aprovado') !== 'aprovado');
+  $('grpBody').innerHTML = `<h3 style="margin-bottom:8px">Editar grupo</h3><small style="color:var(--mu)">As alterações valem para todos os membros.</small>
+  <div class="pic"><div id="gPrev">${gPhoto || G.photo ? `<img class="av big" src="${gPhoto || G.photo}">` : '<div class="av big">#</div>'}</div><input id="gF" type="file" accept="image/*" style="padding:7px"></div>
+  <label>Nome do grupo</label><input id="gN" value="${esc(G.name)}">
+  <button class="btn" id="gS">Guardar nome e foto</button>
+  <div class="sec" style="padding-left:0">Membros (${mem.length})</div>${mem.map(u => row(u, 'Remover', 'nob', 'removido')).join('') || '<small style="color:var(--mu)">Sem membros.</small>'}
+  <div class="sec" style="padding-left:0">Adicionar / aceitar (${out.length})</div>${out.map(u => row(u, 'Adicionar', 'okb', 'aprovado')).join('') || '<small style="color:var(--mu)">Ninguém à espera.</small>'}
+  <button class="btn" id="gI" style="background:var(--ac2)">🔑 Convidar novo membro</button>
+  <button class="btn" id="gC" style="background:var(--p2);color:var(--tx)">Fechar</button>`;
+  $('grp').classList.remove('hide');
+  $('gF').onchange = e => e.target.files[0] && resizeFile(e.target.files[0], d => { gPhoto = d; $('gPrev').innerHTML = `<img class="av big" src="${d}">`; });
+  $('gS').onclick = () => { const n = $('gN').value.trim(); if (n.length < 2) return alert('Escreva o nome do grupo.');
+    { const ng = { name: n, photo: gPhoto || G.photo }; DB.group = ng; setDoc(doc(fdb, 'meta', 'group'), ng); } $('title').textContent = n; groupEdit(); };
+  $('grpBody').querySelectorAll('button[data-n]').forEach(b => b.onclick = () => stM(b.dataset.n, b.dataset.s));
+  $('gI').onclick = () => { const k = rnd('ELITE'); setDoc(doc(fdb, 'codes', k), { used: '', t: Date.now() });
+    window.open('https://wa.me/?text=' + encodeURIComponent('Convite para a ' + grp().name + '. O seu código para se inscrever: ' + k), '_blank'); };
+  $('gC').onclick = () => $('grp').classList.add('hide');
+}
+$('ge').onclick = () => groupEdit();
+
+/* ===== Ferramentas ===== */
+const fold = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const SYN = {
+HTML: [
+['Estrutura da página', `<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Minha página</title>
+</head>
+<body>
+  <h1>Olá, mundo!</h1>
+</body>
+</html>`],
+['Texto, links e imagens', `<p>Parágrafo com <b>negrito</b> e <i>itálico</i></p>
+<a href="https://site.com">Link</a>
+<img src="foto.jpg" alt="descrição">`],
+['Listas e tabela', `<ul><li>Item</li></ul>
+<ol><li>Passo 1</li></ol>
+<table><tr><th>Nome</th></tr><tr><td>Ana</td></tr></table>`],
+['Formulário', `<form action="/enviar" method="post">
+  <input type="text" name="nome" placeholder="Nome" required>
+  <select name="nivel"><option>Iniciante</option></select>
+  <button type="submit">Enviar</button>
+</form>`]],
+CSS: [
+['Seletores e cores', `h1 { color: #3ddc97; font-size: 24px; }
+.classe { background: #0d1117; padding: 10px; }
+#id { border: 1px solid gray; border-radius: 8px; }`],
+['Flexbox', `.caixa { display: flex; justify-content: space-between; align-items: center; gap: 10px; }`],
+['Grid', `.grade { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }`],
+['Responsivo (media query)', `@media (max-width: 600px) {
+  .menu { display: none; }
+}`]],
+JavaScript: [
+['Variáveis e tipos', `let nome = "Ana";
+const idade = 20;
+let ativo = true;
+console.log(nome, idade);`],
+['Condições e ciclos', `if (idade >= 18) { console.log("adulto"); } else { console.log("menor"); }
+for (let i = 0; i < 5; i++) { console.log(i); }
+while (cond) { /* repete */ }`],
+['Funções', `function soma(a, b) { return a + b; }
+const dobro = x => x * 2;`],
+['Arrays e objetos', `const nums = [1, 2, 3];
+nums.push(4);
+nums.map(n => n * 2);
+const user = { nome: "Ana", nivel: "Elite" };
+user.nome;`],
+['DOM e eventos', `const btn = document.getElementById("btn");
+btn.addEventListener("click", () => {
+  document.querySelector("h1").textContent = "Clicou!";
+});`],
+['fetch (API)', `fetch("https://api.exemplo.com/dados")
+  .then(r => r.json())
+  .then(d => console.log(d));`]],
+Python: [
+['Variáveis, print e input', `nome = input("Nome: ")
+idade = 20
+print("Olá,", nome)`],
+['if e for', `if idade >= 18:
+    print("adulto")
+elif idade > 12:
+    print("jovem")
+else:
+    print("criança")
+for i in range(5):
+    print(i)`],
+['Funções', `def soma(a, b):
+    return a + b
+print(soma(2, 3))`],
+['Listas e dicionários', `nums = [1, 2, 3]
+nums.append(4)
+user = {"nome": "Ana", "nivel": "Elite"}
+print(user["nome"])`],
+['Classes', `class Aluno:
+    def __init__(self, nome):
+        self.nome = nome
+    def ola(self):
+        print("Sou", self.nome)`],
+['Ficheiros', `with open("dados.txt", "w") as f:
+    f.write("texto")
+with open("dados.txt") as f:
+    print(f.read())`]],
+PHP: [
+['Variáveis e echo', `<?php
+$nome = "Ana";
+echo "Olá, $nome";
+?>`],
+['if, foreach e funções', `<?php
+if ($idade >= 18) { echo "adulto"; }
+foreach ($lista as $item) { echo $item; }
+function soma($a, $b) { return $a + $b; }
+?>`],
+['Formulário ($_POST)', `<?php
+$nome = $_POST["nome"] ?? "";
+echo htmlspecialchars($nome);
+?>`],
+['MySQL (PDO)', `<?php
+$pdo = new PDO("mysql:host=localhost;dbname=bd", "user", "senha");
+$st = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+$st->execute([1]);
+$row = $st->fetch();
+?>`]],
+Java: [
+['Programa principal', `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Olá, mundo!");
+    }
+}`],
+['if e for', `if (idade >= 18) { System.out.println("adulto"); }
+for (int i = 0; i < 5; i++) { System.out.println(i); }`],
+['Classe', `class Aluno {
+    String nome;
+    Aluno(String nome) { this.nome = nome; }
+    void ola() { System.out.println("Sou " + nome); }
+}`],
+['Arrays e ArrayList', `int[] nums = {1, 2, 3};
+ArrayList<String> lista = new ArrayList<>();
+lista.add("Ana");`]],
+C: [
+['printf e scanf', `#include <stdio.h>
+int main() {
+    int n;
+    scanf("%d", &n);
+    printf("Número: %d\n", n);
+    return 0;
+}`],
+['if e for', `if (n > 0) { printf("positivo"); }
+for (int i = 0; i < 5; i++) { printf("%d ", i); }`],
+['Funções e ponteiros', `int soma(int a, int b) { return a + b; }
+int x = 10; int *p = &x; printf("%d", *p);`],
+['Arrays e strings', `int v[3] = {1, 2, 3};
+char nome[20] = "Ana";`]],
+'C++': [
+['cout e cin', `#include <iostream>
+using namespace std;
+int main() {
+    string nome; cin >> nome;
+    cout << "Olá, " << nome << endl;
+    return 0;
+}`],
+['Classe', `class Aluno {
+public:
+    string nome;
+    Aluno(string n) : nome(n) {}
+    void ola() { cout << nome; }
+};`],
+['vector', `#include <vector>
+vector<int> v = {1, 2, 3};
+v.push_back(4);
+for (int x : v) cout << x;`]],
+'C#': [
+['Console', `using System;
+class Program {
+    static void Main() {
+        Console.WriteLine("Olá, mundo!");
+        string nome = Console.ReadLine();
+    }
+}`],
+['Classe', `class Aluno {
+    public string Nome { get; set; }
+    public void Ola() { Console.WriteLine("Sou " + Nome); }
+}`],
+['List e foreach', `var lista = new List<int> { 1, 2, 3 };
+foreach (var n in lista) Console.WriteLine(n);`]],
+SQL: [
+['SELECT', `SELECT nome, nivel FROM membros WHERE nivel = 'Elite' ORDER BY nome;`],
+['INSERT, UPDATE, DELETE', `INSERT INTO membros (nome, nivel) VALUES ('Ana', 'Básico');
+UPDATE membros SET nivel = 'Avançado' WHERE id = 1;
+DELETE FROM membros WHERE id = 2;`],
+['CREATE TABLE', `CREATE TABLE membros (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  nivel VARCHAR(20)
+);`],
+['JOIN', `SELECT m.nome, c.titulo
+FROM membros m JOIN cursos c ON c.membro_id = m.id;`]]
+};
+const LESSONS = [
+{ t: 'HTML: estrutura da página', x: 'Toda página HTML tem html, head e body. O que aparece no ecrã fica dentro do body. Altere o texto e toque em Executar.', c: `<!DOCTYPE html>
+<html>
+<body>
+  <h1>O meu primeiro site</h1>
+  <p>Estou a aprender web na Developer Code Elite!</p>
+</body>
+</html>` },
+{ t: 'HTML: textos, links e imagens', x: 'Use h1 a h6 para títulos, p para parágrafos, a para links. Experimente mudar o endereço do link.', c: `<h2>Título</h2>
+<p>Texto com <b>negrito</b>.</p>
+<a href="https://developer.mozilla.org">Aprender mais</a>
+<ul><li>HTML</li><li>CSS</li><li>JS</li></ul>` },
+{ t: 'HTML: formulários', x: 'Formulários recolhem dados do utilizador. Cada campo input tem um tipo (text, password, email, number).', c: `<form>
+  <input type="text" placeholder="Nome"><br><br>
+  <input type="email" placeholder="Email"><br><br>
+  <button>Enviar</button>
+</form>` },
+{ t: 'CSS: cores e caixas', x: 'CSS dá estilo ao HTML. Cada elemento é uma caixa com padding (interior), border e margin (exterior).', c: `<style>
+  h1 { color: teal; }
+  .caixa { background: #eee; padding: 16px; border-radius: 12px; border: 2px solid teal; }
+</style>
+<h1>Estilo</h1>
+<div class="caixa">Uma caixa bonita</div>` },
+{ t: 'CSS: Flexbox', x: 'Flexbox alinha itens em linha ou coluna. Experimente trocar justify-content para center.', c: `<style>
+  .linha { display: flex; justify-content: space-between; gap: 8px; }
+  .linha div { background: #3ddc97; padding: 20px; border-radius: 8px; }
+</style>
+<div class="linha"><div>1</div><div>2</div><div>3</div></div>` },
+{ t: 'JavaScript: variáveis e funções', x: 'JavaScript dá vida à página. let guarda valores e function agrupa instruções que podem ser reutilizadas.', c: `<p id="r"></p>
+<script>
+  function saudacao(nome) { return "Olá, " + nome + "!"; }
+  document.getElementById("r").textContent = saudacao("Developer");
+<\/script>` },
+{ t: 'JavaScript: eventos e DOM', x: 'Um evento acontece quando o utilizador interage. Aqui, o clique no botão altera um contador na página.', c: `<button id="b">Clique</button> <b id="n">0</b>
+<script>
+  let c = 0;
+  document.getElementById("b").addEventListener("click", () => {
+    c++; document.getElementById("n").textContent = c;
+  });
+<\/script>` },
+{ t: 'JavaScript: arrays e ciclos', x: 'Um array guarda vários valores. O ciclo for percorre cada um. Adicione mais linguagens à lista.', c: `<ul id="l"></ul>
+<script>
+  const langs = ["HTML", "CSS", "JavaScript"];
+  for (const x of langs) {
+    document.getElementById("l").innerHTML += "<li>" + x + "</li>";
+  }
+<\/script>` }
+];
+
+function openTool(k) {
+  chatWith = null; inPanel = false; inTool = true;
+  $('list').classList.add('hide'); $('chat').classList.add('hide'); $('ge').classList.add('hide');
+  $('tool').classList.remove('hide'); $('back').classList.remove('hide');
+  k === 't:syn' ? toolSyn() : k === 't:web' ? toolWeb() : toolIA();
+}
+function toolSyn() {
+  $('title').textContent = 'Sintaxes'; $('sub').textContent = 'Guia de referência';
+  $('tool').innerHTML = `<select id="sl">${Object.keys(SYN).map(l => `<option>${l}</option>`).join('')}</select><input id="sq" placeholder="Pesquisar (ex.: for, função, array)" style="margin-top:8px"><div id="so"></div>`;
+  const r = () => { const q = fold($('sq').value), l = $('sl').value;
+    $('so').innerHTML = SYN[l].filter(e => !q || fold(e[0] + e[1]).includes(q)).map(e => `<h3>${esc(e[0])}</h3><pre>${esc(e[1])}</pre>`).join('') || '<div class="empty">Nada encontrado.</div>'; };
+  $('sl').onchange = $('sq').oninput = r; r();
+}
+const STOP = ['como', 'fazer', 'para', 'uma', 'com', 'qual', 'usar', 'quero', 'que', 'sobre'];
+function answer(q) {
+  const f = fold(q), tk = f.split(/[^a-z0-9#+]+/).filter(t => (t.length > 1 || t === 'c') && !STOP.includes(t));
+  if (/^(ola|oi|bom dia|boa tarde|boa noite)/.test(f)) return 'Olá! Em que linguagem precisa de ajuda?';
+  if (/\b(erro|bug|nao funciona)\b/.test(f)) return 'Para achar o erro: 1) leia a mensagem e a linha indicada; 2) confira parênteses, chavetas e aspas; 3) imprima variáveis (console.log / print); 4) teste por partes. Diga a linguagem e o tema e mostro a sintaxe certa.';
+  const pool = [];
+  for (const l in SYN) SYN[l].forEach(e => pool.push({ l, t: e[0], c: e[1], k: fold(e[0] + ' ' + e[1]) }));
+  LESSONS.forEach(x => pool.push({ l: 'Aula', t: x.t, c: x.c, k: fold(x.x) }));
+  const sc = pool.map(p => ({ p, s: tk.reduce((a, t) => a + (fold(p.l) === t ? 3 : 0) + (fold(p.t).includes(t) ? 2 : 0) + (p.k.includes(t) ? 1 : 0), 0) }))
+    .filter(x => x.s > 0).sort((a, b) => b.s - a.s).slice(0, 2);
+  return sc.length ? sc.map(x => `<b>${esc(x.p.l)} — ${esc(x.p.t)}</b><pre>${esc(x.p.c)}</pre>`).join('')
+    : 'Não encontrei isso na minha base. Tente dizer a linguagem e o tema, por exemplo "python lista" ou "css grid", ou abra o Professor Web e as Sintaxes.';
+}
+function toolIA() {
+  $('title').textContent = 'IA de Programação'; $('sub').textContent = 'Assistente da comunidade';
+  $('tool').innerHTML = `<div id="ch"><div class="bub">🤖 Olá! Sou o assistente de programação. Pergunte, por exemplo: "for em python", "o que é flexbox", "select em sql".</div></div>
+  <div style="display:flex;gap:8px;margin-top:10px"><input id="iq" placeholder="Pergunte sobre programação…" style="border-radius:99px"><button class="rb" id="is">➤</button></div>`;
+  const go = () => { const q = $('iq').value.trim(); if (!q) return; $('iq').value = '';
+    $('ch').insertAdjacentHTML('beforeend', `<div class="bub u">${esc(q)}</div><div class="bub">${answer(q)}</div>`); $('tool').scrollTop = $('tool').scrollHeight; };
+  $('is').onclick = go; $('iq').onkeydown = e => { if (e.key === 'Enter') go(); };
+}
+function toolWeb() {
+  $('title').textContent = 'Professor Web'; $('sub').textContent = 'HTML, CSS e JavaScript';
+  const pr = load('dce_prog_' + me.num, {});
+  $('tool').innerHTML = `<div class="bub">👨‍🏫 Bem-vindo! Sou o seu Professor Web. Siga as aulas por ordem: leia, edite o código e veja o resultado.</div>` +
+    LESSONS.map((x, i) => `<div class="row" data-i="${i}"><div class="i"><b>${i + 1}. ${esc(x.t)}</b></div><span>${pr[i] ? '✅' : ''}</span></div>`).join('');
+  $('tool').querySelectorAll('.row').forEach(r => r.onclick = () => lesson(+r.dataset.i));
+}
+function lesson(i) {
+  const x = LESSONS[i], pr = load('dce_prog_' + me.num, {});
+  $('tool').innerHTML = `<button class="ib" id="lb">‹ Aulas</button><h3>${i + 1}. ${esc(x.t)}</h3><div class="bub">👨‍🏫 ${esc(x.x)}</div>
+  <textarea id="lc" spellcheck="false" autocapitalize="off">${esc(x.c)}</textarea>
+  <div class="acts" style="margin-top:8px"><button class="okb" id="lr">▶ Executar</button><button class="okb" id="ld">${pr[i] ? '✅ Concluída' : 'Marcar concluída'}</button></div>
+  <iframe id="lf" sandbox="allow-scripts"></iframe>`;
+  const run = () => $('lf').srcdoc = $('lc').value; run();
+  $('lr').onclick = run; $('lb').onclick = toolWeb;
+  $('ld').onclick = () => { pr[i] = 1; save('dce_prog_' + me.num, pr); toolWeb(); };
+}
+
+/* Restaurar sessão guardada no telemóvel */
+(async () => {
+  const hideBoot = () => $('boot').classList.add('hide');
+  setTimeout(hideBoot, 8000);
+  if (fbErr) { hideBoot(); banner('Sem ligação ao Firebase. Verifique a internet e abra de novo.'); return; }
+  try {
+    await auth.authStateReady();
+    const cu = auth.currentUser;
+    if (cu && cu.email) {
+      const sn = await lim(getDoc(doc(fdb, 'users', cu.email.split('@')[0])), 15000), p = sn.exists() ? sn.data() : null;
+      if (p && (p.status || 'aprovado') === 'aprovado') enter(p);
+      else await signOut(auth);
+    }
+  } catch (e) { /* sem internet: mostra o ecrã de entrada */ }
+  hideBoot();
+})();
+
+/* Atualização automática de mensagens */
+setInterval(() => { if (me && chatWith) render(false); }, 2500);
+</script>
+</body>
+</html>
